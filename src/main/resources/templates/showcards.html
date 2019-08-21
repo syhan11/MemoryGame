@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:insert="basicfrag :: headerFrag"></div>
+    <title>MemoryCardGame</title>
+</head>
+
+<body>
+<div th:insert="basicfrag :: navFrag"></div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-3" th:each="tmpcard : ${allcards}">
+            <span th:if="${tmpcard.front}">
+                 <span th:if="${tmpcard.found}">
+                        <button disabled> <a th:href="@{/selectcard/{id}(id=${tmpcard.cardposition})}">
+                                <img style="width: 100px; height:100px" th:src=${tmpcard.frontcard} alt="card front image1">
+                        </a></button>
+                 </span>
+                <span th:unless="${tmpcard.found}">
+                        <button> <a th:href="@{/selectcard/{id}(id=${tmpcard.cardposition})}">
+                                <img style="width: 100px; height:100px" th:src=${tmpcard.frontcard} alt="card front image1">
+                        </a></button>
+                 </span>
+            </span>
+            <span th:unless="${tmpcard.front}">
+                <button>
+                    <a th:href="@{/selectcard/{id}(id=${tmpcard.cardposition})}">
+                                <img style="width: 100px; height:100px" th:src=${tmpcard.backcard} alt="card back image1">
+                    </a></button>
+            </span>
+        </div>
+    </div>
+</div>
+
+
+<div th:insert="basicfrag :: footerFrag"></div>
+<div th:insert="basicfrag :: scriptFrag"></div>
+</body>
+</html>
