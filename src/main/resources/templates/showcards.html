@@ -14,21 +14,47 @@
             <span th:if="${tmpcard.front}">
                  <span th:if="${tmpcard.found}">
                         <button disabled> <a th:href="@{/selectcard/{id}(id=${tmpcard.cardposition})}">
-                                <img style="width: 100px; height:100px" th:src=${tmpcard.frontcard} alt="card front image1">
+                                <img class="memorycardimage" th:src=${tmpcard.frontcard} alt="card front image1">
                         </a></button>
                  </span>
-                <span th:unless="${tmpcard.found}">
-                        <button> <a th:href="@{/selectcard/{id}(id=${tmpcard.cardposition})}">
-                                <img style="width: 100px; height:100px" th:src=${tmpcard.frontcard} alt="card front image1">
-                        </a></button>
+                <span th:unless="${tmpcard.found}" >
+                    <div th:switch="${disableflag}">
+                        <button th:case="true">
+                            <a href="#">
+                                <img class="memorycardimage" th:src=${tmpcard.frontcard} alt="card front image1">
+                            </a>
+                        </button>
+                        <button th:case="*">
+                                <a th:href="@{/selectcard/{id}(id=${tmpcard.cardposition})}">
+                                    <img class="memorycardimage" th:src=${tmpcard.frontcard} alt="card front image1">
+                                </a>
+                        </button>
+                    </div>
                  </span>
+
+<!--                <span th:unless="${tmpcard.found}" >-->
+<!--                        <button> <a th:href="@{/selectcard/{id}(id=${tmpcard.cardposition})}">-->
+<!--                                <img class="memorycardimage" th:src=${tmpcard.frontcard} alt="card front image1">-->
+<!--                        </a></button>-->
+<!--                 </span>-->
+
+
             </span>
             <span th:unless="${tmpcard.front}">
-                <button>
-                    <a th:href="@{/selectcard/{id}(id=${tmpcard.cardposition})}">
-                                <img style="width: 100px; height:100px" th:src=${tmpcard.backcard} alt="card back image1">
-                    </a></button>
+                <div th:switch="${disableflag}">
+                    <button th:case="true">
+                        <a href="#">
+                            <img class="memorycardimage" th:src=${tmpcard.backcard} alt="card back image1">
+                        </a></button>
+                    <button th:case="*">
+                        <a th:href="@{/selectcard/{id}(id=${tmpcard.cardposition})}">
+                            <img class="memorycardimage" th:src=${tmpcard.backcard} alt="card back image1">
+                        </a>
+                    </button>
+                </div>
             </span>
+                <br/>
+            </div>
         </div>
     </div>
 </div>

@@ -11,7 +11,7 @@
 
     <link href="//netdna.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
 
-    <!--    <link rel="stylesheet" type="text/css" th:href="@{/css/basicstyle.css}">-->
+    <link rel="stylesheet" type="text/css" th:href="@{/css/basicstyle.css}">
 
 </th:block>
 
@@ -35,17 +35,17 @@
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link" href="#">
-                        Status
+                    <a class="nav-link" href="/continue">
+                        Continue
                     </a>
                 </li>
             </ul>
         </div>
-        <div>
 
-                <p th:text="*{msg}"></p>
-
+        <div class="cardmsg">
+            <h2 th:text="*{msg}"></h2>
         </div>
+
     </nav>
 </th:block>
 

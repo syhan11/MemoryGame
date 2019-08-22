@@ -43,6 +43,22 @@ public class HomeController {
             cardRepository.save(tmpcard);
         }
 
+        model.addAttribute("disableflag", false);
+        return "showcards";
+    }
+
+    @RequestMapping("/continue")
+    public String continueGame(Model model) {
+        ArrayList<Card> cards = cardRepository.findAllByFrontEqualsAndFoundEquals(true, false);
+        for (Card curcard : cards) {
+            curcard.setFront(false);
+            cardRepository.save(curcard);
+        }
+
+        cards = cardRepository.findAll();
+        model.addAttribute("allcards", cards);
+        model.addAttribute("msg", "Select a new card");
+        model.addAttribute("disableflag", false);
         return "showcards";
     }
 
@@ -57,8 +73,10 @@ public class HomeController {
             if (prevcard == null) {
                 // first card selection - flip the card to face front
                 curcard.setFront(true);
+                curcard.setFound(false);
                 cardRepository.save(curcard);
                 msg = "Select next card.";
+                model.addAttribute("disableflag", false);
 
             }
             else {
@@ -70,17 +88,19 @@ public class HomeController {
                     prevcard.setFound(true);
                     cardRepository.save(curcard);
                     cardRepository.save(prevcard);
-                    msg = "Match made. Select a card.";
+                    msg = "Good work!!! Match made. Select a new card.";
+                    model.addAttribute("disableflag", false);
                 }
                 else {
                     // unmatched
-                    curcard.setFront(false);
+                    curcard.setFront(true);
                     curcard.setFound(false);
-                    prevcard.setFront(false);
+                    prevcard.setFront(true);
                     prevcard.setFound(false);
                     cardRepository.save(curcard);
                     cardRepository.save(prevcard);
-                    msg = "No match. Select a card.";
+                    msg = "Sorry but no match. Select 'Continue'.";
+                    model.addAttribute("disableflag", true);
                 }
             }
             model.addAttribute("msg", msg);
