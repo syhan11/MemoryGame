@@ -43,7 +43,7 @@ public class HomeController {
             cardRepository.save(tmpcard);
         }
 
-        model.addAttribute("disableflag", false);
+        model.addAttribute("disableflag", 0);
         return "showcards";
     }
 
@@ -58,7 +58,7 @@ public class HomeController {
         cards = cardRepository.findAll();
         model.addAttribute("allcards", cards);
         model.addAttribute("msg", "Select a new card");
-        model.addAttribute("disableflag", false);
+        model.addAttribute("disableflag", 0);
         return "showcards";
     }
 
@@ -70,26 +70,42 @@ public class HomeController {
         String msg;
 
         if (curcard != null) {
-            if (prevcard == null) {
+            if (curcard.isFront()) {
+                msg = "Already selected card. Select a new card.";
+                model.addAttribute("disableflag", 0);
+            }
+            else if (prevcard == null) {
                 // first card selection - flip the card to face front
                 curcard.setFront(true);
                 curcard.setFound(false);
                 cardRepository.save(curcard);
                 msg = "Select next card.";
-                model.addAttribute("disableflag", false);
+                model.addAttribute("disableflag", 0);
 
             }
             else {
                 // 2nd card selection
-                // check for matching card
-                if (prevcard.getCardval() == curcard.getCardval()) {
+                if (prevcard.getCardposition() == curcard.getCardposition()) {
+                    // same card has been selected
+                    msg = "Already selected card. Select a new card.";
+                    model.addAttribute("disableflag", 0);
+                }
+                else if (prevcard.getCardval() == curcard.getCardval()) {
+                    // check for matching card
                     curcard.setFront(true);
                     curcard.setFound(true);
                     prevcard.setFound(true);
                     cardRepository.save(curcard);
                     cardRepository.save(prevcard);
-                    msg = "Good work!!! Match made. Select a new card.";
-                    model.addAttribute("disableflag", false);
+                    long cnt = cardRepository.countCardsByFoundEquals(true);
+                    if (cnt == cardRepository.count()) {
+                        msg = "Congratulations!!!! Select 'Restart'";
+                        model.addAttribute("disableflag", 1);
+                    }
+                    else {
+                        msg = "Good work!!! Match made. Select a new card.";
+                        model.addAttribute("disableflag", 0);
+                    }
                 }
                 else {
                     // unmatched
@@ -100,7 +116,7 @@ public class HomeController {
                     cardRepository.save(curcard);
                     cardRepository.save(prevcard);
                     msg = "Sorry but no match. Select 'Continue'.";
-                    model.addAttribute("disableflag", true);
+                    model.addAttribute("disableflag", 1);
                 }
             }
             model.addAttribute("msg", msg);

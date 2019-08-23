@@ -9,4 +9,5 @@ public interface CardRepository extends CrudRepository<Card, Long> {
     Card findCardByCardpositionEquals(int index);
     Card findCardByFrontEqualsAndFoundEquals(boolean front, boolean found);
     ArrayList<Card> findAllByFrontEqualsAndFoundEquals(boolean front, boolean found);
+    long countCardsByFoundEquals(boolean found);
 }
