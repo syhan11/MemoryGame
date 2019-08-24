@@ -19,10 +19,12 @@ public class HomeController {
 
     public ArrayList<Card> convertToArray(Deck carddeck) {
         ArrayList<Card> cards = new ArrayList<Card>();
+        Card tmpcard;
 
-        for (int i = 0; i < carddeck.getSz(); i++) {
-            for (int j = 0; j < carddeck.getSz(); j++) {
-                cards.add(carddeck.getCard(i, j));
+        for (int i = 0; i < carddeck.getMaxrow(); i++) {
+            for (int j = 0; j < carddeck.getMaxrow(); j++) {
+                tmpcard = carddeck.getCard(i, j);
+                cards.add(tmpcard);
             }
         }
 
@@ -34,14 +36,16 @@ public class HomeController {
         ArrayList<Card> cards;
         String msg = "Select a card.";
 
-        deckofcard.shuffleCards();
-        cards = convertToArray(deckofcard);
-        model.addAttribute("allcards", cards);
-        model.addAttribute("msg", msg);
+        cards = deckofcard.shuffleCards();
+        //cards = convertToArray(deckofcard);
 
         for (Card tmpcard : cards) {
             cardRepository.save(tmpcard);
         }
+        cards = cardRepository.findAllByOrderByCardposition();
+        model.addAttribute("allcards", cards);
+        model.addAttribute("msg", msg);
+
 
         model.addAttribute("disableflag", 0);
         return "showcards";
@@ -55,7 +59,8 @@ public class HomeController {
             cardRepository.save(curcard);
         }
 
-        cards = cardRepository.findAll();
+        //cards = cardRepository.findAll();
+        cards = cardRepository.findAllByOrderByCardposition();
         model.addAttribute("allcards", cards);
         model.addAttribute("msg", "Select a new card");
         model.addAttribute("disableflag", 0);
@@ -123,7 +128,8 @@ public class HomeController {
         }
 
         ArrayList<Card> cards;
-        cards = cardRepository.findAll();
+        //cards = cardRepository.findAll();
+        cards = cardRepository.findAllByOrderByCardposition();
         model.addAttribute("allcards", cards);
 
         return "showcards";
